@@ -1,0 +1,55 @@
+parcellaire:
+  url: /parcellaire
+  param: { module: parcellaire, action: index }
+  class: ParcellaireGeneralRoute
+
+parcellaire_etablissement_selection:
+  url: /parcellaires-etablissement-selection
+  param: { module: parcellaire, action: etablissementSelection }
+
+
+parcellaire_declarant:
+  url: /parcellaire/declarant/:identifiant
+  param: { module: parcellaire, action: declarant }
+  class: ParcellaireDeclarantRoute
+  options:
+    model:    Etablissement
+    type:     object
+  requirements:
+    sf_method: [get, post]
+
+parcellaire_visualisation:
+  url: /parcellaire/visualisation/:id
+  param: { module: parcellaire, action: visualisation }
+  class: ParcellaireRoute
+  options:
+    model:    Parcellaire
+    type:     object
+  requirements:
+    sf_method: [get, post]
+
+parcellaire_scrape_douane:
+  url: /parcellaire/scrape/:identifiant
+  param: { module: parcellaire, action: scrape }
+  class: ParcellaireDeclarantRoute
+  options:
+    model: Etablissement
+    type: object
+  requirements:
+    sf_method: get
+
+parcellaire_import_csv:
+  url: /parcellaire/import/:identifiant
+  param: { module: parcellaire, action: import }
+  class: ParcellaireDeclarantRoute
+  options:
+    model: Etablissement
+    type: object
+
+parcellaire_map:
+  url: /parcellaire/map/:identifiant
+  param: { module: parcellaire, action: map}
+  class: ParcellaireDeclarantRoute
+  options:
+    model: Etablissement
+    type: object

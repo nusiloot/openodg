@@ -8,7 +8,7 @@
  
  */
 
-abstract class BaseParcellaireDeclaration extends _ParcellaireDeclarationNoeud {
+abstract class BaseParcellaireDeclaration extends acCouchdbDocumentTree {
                 
     public function configureTree() {
        $this->_root_class_name = 'Parcellaire';

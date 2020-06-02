@@ -85,55 +85,35 @@
         var datePickers = $(this).find('.date-picker');
         datePickers.each(function ()
         {
-            var currentDp = $(this);
-            hasValue = currentDp.find('input').val();
-            currentDp.datetimepicker
+            $(this).datetimepicker({ locale: 'fr', format: 'DD/MM/YYYY', allowInputToggle: true, showTodayButton: true, useCurrent: false  });
+        });
+        var datePickers = $(this).find('.date-picker-week');
+        datePickers.each(function ()
+        {
+            $(this).datetimepicker
                     ({
-                        language: 'fr',
-                        pickTime: false,
-                        useCurrent: false,
+                        locale: 'fr',
                         calendarWeeks: true,
+                        format: 'DD/MM/YYYY',
+                        allowInputToggle: true,
+                        useCurrent: false
                     });
-            if (!hasValue) {
-                currentDp.find('input').val('');
-            }
-
-            currentDp.on('focus', 'input', function ()
-            {
-                currentDp.data('DateTimePicker').hide();
-                currentDp.data('DateTimePicker').show();
-            });
         });
         var datePickers = $(this).find('.date-picker-all-days');
         datePickers.each(function ()
         {
-            var currentDp = $(this);
-            currentDp.datetimepicker
-                    ({
-                        language: 'fr',
-                        pickTime: false
-                    });
-            currentDp.on('focus', 'input', function ()
-            {
-                currentDp.data('DateTimePicker').hide();
-                currentDp.data('DateTimePicker').show();
-            });
+            $(this).datetimepicker({ locale: 'fr', format: 'DD/MM/YYYY', allowInputToggle: true, useCurrent: false });
         });
         var datePickers = $(this).find('.date-picker-time');
         datePickers.each(function ()
         {
-            var currentDp = $(this);
-            currentDp.datetimepicker
-                    ({
-                        language: 'fr',
-                        pickDate: false,
-                        useCurrent: false,
-                        minuteStepping: 5
-                    });
-            currentDp.on('focus', 'input', function ()
-            {
-                currentDp.data('DateTimePicker').hide();
-                currentDp.data('DateTimePicker').show();
+            $(this).datetimepicker
+            ({
+                locale: 'fr',
+                format: 'LT',
+                useCurrent: false,
+                allowInputToggle: true,
+                stepping: 5
             });
         });
     };
@@ -180,12 +160,6 @@
 
                     return item.text;
                 }});
-        });
-
-        $(this).find(".select2SubmitOnChange").on("change", function (e) {
-            if (e.val || $(this).val()) {
-                $(this).parents('form').submit();
-            }
         });
     }
 
@@ -246,23 +220,23 @@
     $.initSelect2PermissifNoAjax = function ()
     {
         if ($('.select2permissifNoAjax').length) {
-            $('.select2permissifNoAjax').select2({
-                data: JSON.parse($('.select2permissifNoAjax').attr('data-choices')),
-                multiple: false,
-                placeholder: true,
-                allowClear: true,
-                createSearchChoice: function (term, data) {
-                    if ($(data).filter(function () {
-                        return this.text.localeCompare(this.text) === 0;
-                    }).length === 0) {
-                        return {id: term, text: term + ' (nouveau)'};
-                    }
-                }
-            }).on("select2-open", function (e) {
-                $('.select2-input').attr('placeholder', 'Rechercher ou ajouter un nouvel élément');
-            }).on("select2-close", function (e) {
-                $('.select2-input').attr('placeholder', null);
-            });
+        	$('.select2permissifNoAjax').each(function() {
+        	    var element = $(this);
+        	    var complement = (element.attr('data-new'))? element.attr('data-new') : 'nouveau';
+        	    element.select2({
+	                data: JSON.parse(element.attr('data-choices')),
+	                multiple: false,
+	                placeholder: true,
+	                allowClear: true,
+	                createSearchChoice: function (term, data) {
+	                    if ($(data).filter(function () {
+	                        return this.text.localeCompare(this.text) === 0;
+	                    }).length === 0) {
+	                        return {id: term, text: term + ' ('+complement+')'};
+	                    }
+	                }
+	            });
+        	});
         }
     }
 
@@ -303,28 +277,143 @@
     }
     $.initBsSwitchCheckbox = function ()
     {
+    	$("input.bsswitch-input").on("click", function(e) {e.stopPropagation();});
+    	if ($('.bsswitch').size() == $('.bsswitch:checked').size()) {
+        	$('.bootstrap-switch-activeall').hide();
+        	$('.bootstrap-switch-removeall').show();
+        } else {
+        	$('.bootstrap-switch-removeall').hide();
+        	$('.bootstrap-switch-activeall').show();
+        }
+
         $.fn.onoff = function (event, state) {
             if (state) {
                 $(this).parent().parent().parent().removeClass("bootstrap-switch-off");
                 $(this).parent().parent().parent().addClass("bootstrap-switch-on");
                 $(this).parent().parent().parent().parent().removeClass("bootstrap-switch-off");
                 $(this).parent().parent().parent().parent().addClass("bootstrap-switch-on");
+                $(this).parent().parent().parent().parent().addClass('success');
+                $(this).parent().parent().parent().parent().parent().parent().find("input.bsswitch-input").removeAttr("disabled");
             } else {
                 $(this).parent().parent().parent().addClass("bootstrap-switch-off");
                 $(this).parent().parent().parent().removeClass("bootstrap-switch-on");
                 $(this).parent().parent().parent().parent().addClass("bootstrap-switch-off");
                 $(this).parent().parent().parent().parent().removeClass("bootstrap-switch-on");
+                $(this).parent().parent().parent().parent().removeClass('success');
+                $(this).parent().parent().parent().parent().parent().parent().find("input.bsswitch-input").attr("disabled", "disabled");
+            }
+            if ($('.bsswitch').size() == $('.bsswitch:checked').size()) {
+            	$('.bootstrap-switch-activeall').hide();
+            	$('.bootstrap-switch-removeall').show();
+            } else {
+            	$('.bootstrap-switch-removeall').hide();
+            	$('.bootstrap-switch-activeall').show();
             }
         };
         $('.bsswitch').on('switchChange.bootstrapSwitch', $.fn.onoff);
         $('.bsswitch').on('init.bootstrapSwitch', $.fn.onoff);
         $('.bsswitch').bootstrapSwitch();
 
+
+        if ($('.bsswitch').size() == $('.bsswitch:checked').size()) {
+        	$('.bootstrap-switch-activeall').hide();
+        	$('.bootstrap-switch-removeall').show();
+        }
+
         $('tr td').click(function (event) {
             if (!$(this).hasClass('edit')) {
-                var value = ($(this).parent().find('td.bootstrap-switch-off .bsswitch').val() == 'on');
-                $(this).parent().find('td .bsswitch').bootstrapSwitch('state', value, false);
+                var value = $(this).parent().find('.bsswitch').is(':checked');
+                $(this).parent().find('td .bsswitch').bootstrapSwitch('state', !value, false);
             }
+        });
+        $('tr').click(function (event) {
+            $.trBsSwitchHighlight($(this));
+        });
+
+        $('.bootstrap-switch-activeall').click(function (event) {
+        	$($(this).data('target')).find('.bsswitch').each(function () {
+        		$(this).bootstrapSwitch('state', true, false);
+        	});
+            $($(this).data('target')).find('tr').each(function () {
+                $.trBsSwitchHighlight($(this));
+            });
+            $(this).hide();
+            $(this).parent().find('.bootstrap-switch-removeall').show();
+        });
+
+        $('.bootstrap-switch-removeall').click(function (event) {
+        	$($(this).data('target')).find('.bsswitch').each(function () {
+        		$(this).bootstrapSwitch('state', false, false);
+        	});
+            $($(this).data('target')).find('tr').each(function () {
+                $.trBsSwitchHighlight($(this));
+            });
+            $(this).hide();
+            $(this).parent().find('.bootstrap-switch-activeall').show();
+        });
+    }
+
+    $.trBsSwitchHighlight = function (tr)
+    {
+        if ($(tr).hasClass('switch-to-higlight')) {
+            var value = $(tr).find('.bsswitch').is(':checked');
+            if(value){
+                $(tr).addClass("success");
+            }else{
+                $(tr).removeClass("success");
+            }
+        }
+    }
+
+
+    $.initDuplicateChoicesTable = function ()
+    {
+        var table = $('.duplicateChoicesTable');
+        table.each(function(){
+            var allFields = $(this).find('.toDuplicate');
+            $(this).find('.duplicateBtn').click(function (event) {
+                var alerttxt = ($(this).data('alert')).replace('#','\n');
+                var confirmtxt = $(this).data('confirm');
+                if($(this).hasClass('inactif')){
+                    alert(alerttxt);
+                }else{
+                    var fieldsToDuplicate = {};
+                    $("#" + $(this).data('target')).find('.toDuplicate').each(function () {
+                        if($(this).data("duplicate")){
+                            fieldsToDuplicate[$(this).data("duplicate")] = $(this).select2('data');
+                        }
+                    });
+                    confirmtxt = confirmtxt.replace('MATERIEL','"'+fieldsToDuplicate.materiel.id+'"').replace('RESSOURCE','"'+fieldsToDuplicate.ressources.id+'"');
+                    if (confirm(confirmtxt)) {
+
+                        for (var f in fieldsToDuplicate) {
+                            $(this).closest('tr').nextAll().find("[data-duplicate='"+f+"']").each(function(){
+                                $(this).val(fieldsToDuplicate[f].id);
+                                $(this).change();
+                            });
+                        }
+                    }
+                }
+            });
+            $(this).find('tr').each(function(){
+                var tr = $(this);
+                $(this).find('.toDuplicate').change(function(){
+                        tr.each(function(){
+                            var disabled = false;
+                            $(this).find('.toDuplicate').each(function(){
+                                if($(this).data("duplicate")){
+                                    if(!$(this).select2('data')){
+                                        tr.find('.duplicateBtn').addClass("inactif").css('opacity',0.6);;
+                                        disabled = true;
+                                    }
+                                }
+                            });
+                            if(!disabled){
+                                tr.find('.duplicateBtn').removeClass("inactif").css('opacity',1);
+                            }
+                    });
+                });
+            });
         });
     }
 
@@ -454,21 +543,25 @@
     $.initCarte = function ()
     {
         $('.carte').each(function () {
-            var map = L.map($(this).attr('id'), {minZoom: 6, zoom: 10, }).setView([48.100901, 7.361051], 9);
-            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            var map = L.map($(this).get(0), {minZoom: 6, zoom: 10, }).setView([46.9217784, 2.4344831], 1);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 18,
-                attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
+
             var points = JSON.parse($(this).attr('data-point'));
             for (point_key in points) {
                 L.marker(points[point_key]).addTo(map);
             }
-            map.fitBounds(points, {padding: [10, 10], maxZoom: 13});
+            map.fitBounds(points, {padding: [10, 10], maxZoom: 12});
         });
     };
 
     $.initModal = function () {
         $('.modal.modal-page').modal({keyboard: false, backdrop: 'static'});
+        if($('.modal').find('.has-error').length !== 0) {
+        	$('.modal').modal('show');
+        }
     }
 
     $.initCheckboxBtnGroup = function() {
@@ -482,6 +575,7 @@
     }
 
     $.initValidationDeclaration = function() {
+	$('#btn-validation-document').attr('type', 'button');
         $('#submit-confirmation-validation').click(function() {
             $('#validation-form').submit();
         });
@@ -668,13 +762,152 @@
     }
 
     $.fn.initAdvancedElements = function () {
+        $(this).find('.input-float').inputNumberFormat({'decimal': 4, 'decimalAuto': 2});
+        $(this).find('.input-integer').inputNumberFormat({'decimal': 0, 'decimalAuto': 0});
         $(this).initSelect2Autocomplete();
         $(this).initSelect2AutocompleteRemote();
         $(this).initBlocCondition();
+
+        $(this).find(".select2autocompleteAjax").each(function () {
+            var urlAjax = $(this).data('ajax');
+            var defaultValue = $(this).val();
+            var defaultValueSplitted = defaultValue.split(',');
+            var select2 = $(this);
+            $(this).select2({
+                onselected: function () {
+                },
+                initSelection: function (element, callback) {
+                    if (defaultValue != '') {
+                        callback({id: defaultValueSplitted[0], text: defaultValueSplitted[1]});
+                        select2.val(defaultValueSplitted[0]);
+                    }
+                },
+                placeholder: 'Entrer un nom',
+                minimumInputLength: 3,
+                formatInputTooShort: function (input, min) {
+                    var n = min - input.length;
+                    return  min + " caractère" + (n == 1 ? "" : "s") + " min";
+                },
+                formatNoMatches: function () {
+                    return "Aucun résultat";
+                },
+                formatSearching: function () {
+                    return "Recherche…";
+                },
+                allowClear: true,
+                ajax: {
+                    quietMillis: 150,
+                    url: urlAjax,
+                    dataType: 'json',
+                    type: "GET",
+                    data: function (term, page) {
+                        return {
+                            q: term
+                        };
+                    },
+                    results: function (data) {
+                        var results = [];
+                        $.each(data, function (index, item) {
+                            results.push({
+                                id: index,
+                                text: item
+                            });
+                        });
+                        return {
+                            results: results
+                        }
+
+                    }}
+            });
+        });
+
         $(this).initDatePickers();
         $(this).find('input.num_float').saisieNum(true);
         $(this).find('input.num_int').saisieNum(false);
+
+        $(this).find(".select2SubmitOnChange").on("change", function (e) {
+            if (e.val || $(this).val()) {
+                $(this).parents('form').submit();
+            }
+        });
     }
+
+    $.initTableCheckbox = function() {
+        $('table td.pointer_checkbox').click(function() {
+            var checkbox = $(this).find('input[type=checkbox]');
+            if(checkbox.attr('readonly')) {
+                return;
+            }
+            if(checkbox.attr('disabled')) {
+                return;
+            }
+            checkbox.prop('checked',!checkbox.is(':checked'));
+        });
+
+        $('.table td.pointer_checkbox input[type=checkbox]').click(function(e) {
+            e.stopPropagation();
+            if($(this).attr('readonly')) {
+                return false;
+            }
+            if($(this).attr('disabled')) {
+                return false;
+            }
+        });
+    }
+
+    $.initHabilitation = function() {
+
+      $('.open-button').click(function(){
+        if($(this).css('opacity') == "1"){
+          $('tr:hidden').each(function(){
+            $(this).show();
+          });
+          $('td:hidden').each(function(){
+            $(this).show();
+          });
+           $('#table-habilitation td').find('.invisible').removeClass('invisible').addClass('visible');
+          $(this).children('span').each(function(){ $(this).removeClass('glyphicon-eye-open');/*.addClass('glyphicon-eye-close');*/ });
+          $(this).css("opacity","0.6");
+        }else{
+          $('tr[data-hide="1"]').each(function(){
+            $(this).hide();
+            });
+          $('td[data-hide="1"]').each(function(){
+            $(this).hide();
+          });
+          $('#table-habilitation td').find('.visible').removeClass('visible').addClass('invisible');
+          $(this).children('span').each(function(){ $(this).removeClass('glyphicon-eye-close').addClass('glyphicon-eye-open'); });
+          $(this).css("opacity","1");
+        }
+      });
+
+      if($('#ouvert:target').length) {
+        $('.open-button').click();
+      }
+
+        $('#voir_toutes_les_demandes').on('click', function() {
+            $('#tableaux_des_demandes tr.tohide').toggleClass('hidden');
+        });
+    }
+
+    $.initCoordonneesForms = function ()
+    {
+        $('#coordonnees_modification .panel-heading span.clickable').on("click", function (e) {
+            if ($(this).hasClass('panel-collapsed')) {
+                // expand the panel
+                $(this).parents('.panel').find('.panel-body').slideDown();
+                $(this).removeClass('panel-collapsed');
+                $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+                $(this).find('.label-edit').html('Edition');
+            } else {
+                // collapse the panel
+                $(this).parents('.panel').find('.panel-body').slideUp();
+                $(this).addClass('panel-collapsed');
+                $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+                $(this).find('.label-edit').html('Editer');
+            }
+        });
+    };
 
     /* =================================================================================== */
     /* FUNCTIONS CALL */
@@ -692,12 +925,16 @@
         $.initModal();
         $.initDynamicCollection();
         $.initTypeahead();
+        $.initTableCheckbox();
+        $.initCoordonneesForms();
         $('input.num_float').saisieNum(true);
         $('input.num_int').saisieNum(false);
         $('a[data-toggle=tooltip], button[data-toggle=tooltip], span[data-toggle=tooltip]').tooltip({'container': 'body'});
         $('input[data-toggle=tooltip]').tooltip({'trigger': 'focus', 'container': 'body'});
         $.initEqualHeight();
         $.initCheckboxBtnGroup();
+        $.initHabilitation();
+        $.initDuplicateChoicesTable();
         $.fn.modal.Constructor.prototype.enforceFocus = function () {};
     });
 })(jQuery);

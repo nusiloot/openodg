@@ -193,22 +193,17 @@ abstract class acCouchdbJsonFields {
     /**
      *
      * @param string $key
-     * @return mixed 
+     * @return mixed
      */
     public function _get($key) {
         return $this->getField($key);
     }
 
-    protected function _remove($key_or_hash) {
-        $obj_hash = new acCouchdbHash($key_or_hash);
-        if ($obj_hash->isAlone()) {
-            if ($this->_is_array) {
-                return $this->removeNumeric($key_or_hash);
-            } else {
-                return $this->removeNormal($key_or_hash);
-            }
+    protected function _remove($key) {
+        if ($this->_is_array) {
+            return $this->removeNumeric($key);
         } else {
-            return $this->getField($obj_hash->getFirst())->remove($obj_hash->getAllWithoutFirst());
+            return $this->removeNormal($key);
         }
     }
 
@@ -369,7 +364,7 @@ abstract class acCouchdbJsonFields {
                 return $this->getDefinition()->get($key)->getName();
             }
         } else {
-            throw new acCouchdbException(sprintf('field inexistant : %s (%s)', $key, $this->getHash()));
+            throw new acCouchdbException(sprintf('field inexistant : %s:%s/%s (%s)', $this->getDocument()->_id, $this->getHash(), $key));
         }
     }
 
@@ -388,7 +383,7 @@ abstract class acCouchdbJsonFields {
         if ($this->_exist($key)) {
             return $key;
         } else {
-            throw new acCouchdbException(sprintf('field inexistant : %s', $key));
+            throw new acCouchdbException(sprintf('field inexistant : %s:%s/%s', $this->getDocument()->_id, $this->getHash(), $key));
         }
     }
 
@@ -404,7 +399,7 @@ abstract class acCouchdbJsonFields {
         if ($this->_exist($key)) {
             return $this->_fields[self::formatFieldKey($key)];
         } else {
-            throw new acCouchdbException(sprintf('field inexistant : %s (%s%s)', $key, $this->_definition_model, $this->getHash()));
+            throw new acCouchdbException(sprintf('field inexistant : %s:%s/%s', $this->getDocument()->_id, $this->getHash(), $key));
         }
     }
 
@@ -412,7 +407,7 @@ abstract class acCouchdbJsonFields {
         if ($this->_exist($key)) {
             return $this->_fields[$key];
         } else {
-            throw new acCouchdbException(sprintf('field inexistant : %s (%s%s)', $key, $this->_definition_model, $this->getHash()));
+            throw new acCouchdbException(sprintf('field inexistant : %s:%s/%s', $this->getDocument()->_id, $this->getHash(), $key));
         }
     }
 
@@ -466,7 +461,7 @@ abstract class acCouchdbJsonFields {
 	    return $field;
         }
         if (!$this->exist($key)) {
-           throw new acCouchdbException(sprintf('field inexistant : %s (%s%s)', $key, $this->_definition_model, $this->getHash()));
+            throw new acCouchdbException(sprintf('field inexistant : %s:%s/%s', $this->getDocument()->_id, $this->getHash(), $key));
         }
         if ($this->isArray()) {
             $this->_fields[$key] = $data_or_object;

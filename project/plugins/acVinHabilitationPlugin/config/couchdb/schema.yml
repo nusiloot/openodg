@@ -1,0 +1,91 @@
+#Habilitation
+Habilitation:
+  definition:
+    fields:
+      _id: { }
+      _rev: { }
+      type: { }
+      identifiant: { }
+      validation: { required: false }
+      validation_odg: { required: false }
+      etape: { required: false }
+      date: { }
+      papier: { required: false, type: integer }
+      automatique: { required: false, type: integer }
+      lecture_seule: { required: false }
+      version: { required: false }
+      declarant:
+        type: collection
+        definition:
+          fields:
+            nom: { }
+            raison_sociale: { }
+            cvi: { }
+            siret: { }
+            adresse: { }
+            commune: { }
+            code_postal: { }
+            telephone: { }
+            fax: { }
+            email: { }
+      declaration:
+        type: collection
+        class: HabilitationDeclaration
+        definition:
+          fields:
+            '*':
+              type: collection
+              class: HabilitationProduit
+              definition:
+                fields:
+                  libelle: { }
+                  activites:
+                    type: collection
+                    class: HabilitationActivites
+                    definition:
+                      fields:
+                        '*':
+                          type: collection
+                          class: HabilitationActivite
+                          definition:
+                            fields:
+                              date: {  }
+                              commentaire: {  }
+                              statut: {  }
+      demandes:
+        type: collection
+        definition:
+          fields:
+            '*':
+              type: collection
+              class: HabilitationDemande
+              definition:
+                fields:
+                  demande: { }
+                  statut: { }
+                  date: { }
+                  date_habilitation: { }
+                  libelle: { }
+                  commentaire: { }
+                  produit: { }
+                  produit_libelle: { }
+                  activites:
+                    type: array_collection
+                    definition:
+                      fields:
+                        *: { }
+      historique:
+        type: array_collection
+        definition:
+          fields:
+            '*':
+              class: HabilitationHistorique
+              type: collection
+              definition:
+                fields:
+                  iddoc: { }
+                  date: { }
+                  auteur: {  }
+                  description: {  }
+                  commentaire: {  }
+                  statut: { }

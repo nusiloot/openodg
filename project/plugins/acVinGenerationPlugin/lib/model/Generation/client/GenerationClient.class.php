@@ -7,6 +7,7 @@ class GenerationClient extends acCouchdbClient {
     const TYPE_DOCUMENT_RELANCE = 'RELANCE';
     const TYPE_DOCUMENT_EXPORT_CSV = 'EXPORT';
     const TYPE_DOCUMENT_EXPORT_SAGE = 'SAGE';
+    const TYPE_DOCUMENT_EXPORT_PARCELLAIRE = 'PARCELLAIRE';
     const HISTORY_KEYS_TYPE_DOCUMENT = 0;
     const HISTORY_KEYS_TYPE_DATE_EMISSION = 1;
     const HISTORY_KEYS_DOCUMENT_ID = 1;
@@ -46,17 +47,12 @@ class GenerationClient extends acCouchdbClient {
 
     public function findHistoryWithType($type, $limit = 100) {
         $views = acCouchdbManager::getClient()
-                ->startkey(array($type))
-                ->endkey(array($type, array()));
-	$rows = $views->getView("generation", "history")->rows;
-        uasort($rows, "GenerationClient::sortHistory");
-        $cpt = count($rows) - 1;
-        $result = array();
-        while($cpt > (count($rows) - $limit) && $cpt > -1){
-         $result[] = $rows[$cpt]; 
-         $cpt--;
-        }
-	return $result;
+            ->startkey(array($type, array()))
+            ->endkey(array($type))
+            ->descending(true)
+            ->limit($limit);
+	    $rows = $views->getView("generation", "history")->rows;
+	    return $rows;
     }
 
     public static function sortHistory($a, $b) {
@@ -111,6 +107,10 @@ class GenerationClient extends acCouchdbClient {
             case GenerationClient::TYPE_DOCUMENT_EXPORT_SAGE:
 
                 return 'GenerationExportSage';
+
+            case GenerationClient::TYPE_DOCUMENT_EXPORT_PARCELLAIRE:
+
+                return 'GenerationExportParcellaire';
         }
       
         throw new sfException($generation->type_document." n'est pas un type supporté");

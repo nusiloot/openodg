@@ -95,7 +95,7 @@ EOF;
 
             $drev = new DRev();
             $drev->initDoc($etablissement->identifiant, $campagne);
-            $csv = new DRCsvFile($arguments['csv']);
+            $csv = new DRCIVACsvFile($arguments['csv']);
 
             //Juste pour contrôler qu'il n'y a pas volume à revendiquer
             $drev->updateFromCSV(true, false, $csv->getCsvAcheteur($drev->identifiant));

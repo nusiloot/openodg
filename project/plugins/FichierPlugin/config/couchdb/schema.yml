@@ -17,8 +17,10 @@ Fichier:
       fichier_id: { }
       identifiant: { }
       date_depot: { }
+      date_import: { }
       libelle: { }
-      mime: { }
+      categorie: { }
+      mime: { required: false }
       visibilite: { type: integer }
       papier: { required: false, type: integer }
       pieces:
@@ -34,6 +36,12 @@ Fichier:
                   identifiant: { }
                   date_depot: { }
                   libelle: { }
+                  categorie: { }
                   mime: { }
                   visibilite: { type: integer }
                   source: { }
+                  fichiers:
+                    type: array_collection
+                    definition:
+                      fields:
+                        '*': { }

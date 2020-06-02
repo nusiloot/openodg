@@ -1,0 +1,41 @@
+.notification {
+    position: fixed;
+    z-index: 999999;
+    top: 10px;
+    left: 45%;
+    opacity: 0.9;
+    display: none;
+}
+
+.versionner {
+    outline: 1px dotted #ff0000 !important;
+}
+
+.table > tbody > tr > td.vertical-center, table > tbody > tr.vertical-center > td {
+    vertical-align: middle;
+}
+
+.dropdown-menu {
+  z-index: 10000;
+}
+
+.transparence-md {
+    opacity: 0.4;
+}
+
+.transparence-lg {
+    opacity: 0.2;
+}
+
+.transparence-sm {
+    opacity: 0.60;
+}
+
+.transparence-xs {
+    opacity: 0.80;
+}
+
+.panel-body-success {
+  
+  border-color: rgba(130, 147, 69, 0.4);
+}

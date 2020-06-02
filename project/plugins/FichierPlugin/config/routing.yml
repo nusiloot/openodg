@@ -1,0 +1,100 @@
+# PIECE
+
+get_piece:
+  url: /piece/get/:doc_id/:piece_id
+  param: { module: piece, action: get }
+
+# FICHIER
+
+documents:
+  url: /documents
+  param: { module: fichier, action: index }
+  class: DocumentsRoute
+
+mesdocuments:
+  url: /mesdocuments
+  param: { module: fichier, action: mesdocuments }
+
+documents_etablissement_selection:
+  url: /documents-etablissement-selection
+  param: { module: fichier, action: etablissementSelection }
+
+pieces_historique:
+  url: /documents/:identifiant
+  param: { module: fichier, action: piecesHistorique }
+  class: DocumentsDeclarantRoute
+  options:
+    model:    Etablissement
+    type:     object
+  requirements:
+    sf_method: [get]
+
+get_fichier:
+  url: /fichier/get/:id
+  param: { module: fichier, action: get }
+  class: FichierRoute
+  options:
+    model:    Fichier
+    type:     object
+  requirements:
+    sf_method: [get]
+
+delete_fichier:
+  url: /fichier/delete/:id
+  param: { module: fichier, action: delete }
+  class: FichierRoute
+  options:
+    model:    Fichier
+    type:     object
+  requirements:
+    sf_method: [get]
+
+upload_fichier:
+  url: /fichier/upload/:identifiant
+  param: { module: fichier, action: upload }
+  class: DeclarationDeclarantRoute
+  options:
+    model:    Etablissement
+    type:     object
+  requirements:
+    sf_method: [get, post]
+
+csvgenerate_fichier:
+  url: /fichier/csvgenerate/:id
+  param: { module: fichier, action: csvgenerate }
+  class: FichierRoute
+  options:
+    model:    Fichier
+    type:     object
+  requirements:
+    sf_method: [get]
+
+edit_fichier:
+  url: /fichier/edit/:id
+  param: { module: fichier, action: edit }
+  class: FichierRoute
+  options:
+    model:    Fichier
+    type:     object
+  requirements:
+    sf_method: [get, post]
+
+new_fichier:
+  url: /fichier/new/:identifiant
+  param: { module: fichier, action: new }
+  class: DeclarationDeclarantRoute
+  options:
+    model:    Etablissement
+    type:     object
+  requirements:
+    sf_method: [get, post]
+
+scrape_fichier:
+  url: /fichier/scrape/:identifiant
+  param: { module: fichier, action: scrape }
+  class: DeclarationDeclarantRoute
+  options:
+    model:    Etablissement
+    type:     object
+  requirements:
+    sf_method: [get, post]

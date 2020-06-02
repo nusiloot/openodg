@@ -83,6 +83,7 @@ class Degustation extends BaseDegustation implements InterfacePieceDocument {
         $prelevement = $drev->prelevements->{"cuve_".$this->appellation};
         $this->date_demande = $prelevement->date;
         $this->lots = array();
+				$this->add('force', ($prelevement->exist('force') && $prelevement->force));
 
         if($this->appellation == "VTSGN") {
             $vtsgn_items = array("vt" => "VT", "sgn" => "SGN");
@@ -117,7 +118,7 @@ class Degustation extends BaseDegustation implements InterfacePieceDocument {
             }
             $lot->vtsgn = $l->vtsgn;
             $lot->volume_revendique = $l->volume_revendique;
-            $lot->prelevement = 0;
+						$lot->prelevement = ($this->exist('force') && $this->force);
         }
     }
 
@@ -390,6 +391,25 @@ class Degustation extends BaseDegustation implements InterfacePieceDocument {
         return $this->_get('organisme');
     }
 
+	public function getTelephoneBureau(){
+        return Anonymization::hideIfNeeded($this->_get('telephone_bureau'));
+    }
+    public function getTelephoneMobile(){
+        return Anonymization::hideIfNeeded($this->_get('telephone_mobile'));
+    }
+	public function getTelephonePrive(){
+		return Anonymization::hideIfNeeded($this->_get('telephone_prive'));
+	}
+    public function getEmail(){
+        return Anonymization::hideIfNeeded($this->_get('email'));
+    }
+    public function getAdresse() {
+        return Anonymization::hideIfNeeded($this->_get('adresse'));
+    }
+    public function getRaisonSociale() {
+        return Anonymization::hideIfNeeded($this->_get('raison_sociale'));
+    }
+
 	protected function doSave() {
 		$this->piece_document->generatePieces();
 	}
@@ -424,6 +444,18 @@ class Degustation extends BaseDegustation implements InterfacePieceDocument {
 
     public static function getUrlVisualisationPiece($id, $admin = false) {
     	return ($admin)? sfContext::getInstance()->getRouting()->generate('degustation_visualisation', array('id' => preg_replace('/DEGUSTATION-[a-zA-Z0-9]*-/', 'TOURNEE-', $id))) : null;
+    }
+
+    public static function getUrlGenerationCsvPiece($id, $admin = false) {
+    	return null;
+    }
+
+    public static function isVisualisationMasterUrl($admin = false) {
+    	return false;
+    }
+
+    public static function isPieceEditable($admin = false) {
+    	return false;
     }
 
     /**** FIN DES PIECES ****/

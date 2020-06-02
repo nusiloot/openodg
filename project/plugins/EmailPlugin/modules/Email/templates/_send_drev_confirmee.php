@@ -13,6 +13,6 @@ Vous pouvez aussi à tout moment revenir sur votre compte pour consulter votre d
 
 Merci de bien vouloir nous signaler les éventuelles modifications apportées à votre déclaration de Récolte qui pourraient impacter votre déclaration de Revendication.
 
-Bien cordialement,
+Bonne journée.
 
-Le service Appui technique (via l'application de télédéclaration)
+<?php echo include_partial('Email/footerMail'); ?>

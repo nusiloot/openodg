@@ -1,0 +1,261 @@
+#Etablissement
+Etablissement:
+   definition:
+     fields:
+       _id: {  }
+       _rev: {  }
+       type: {  }
+       cooperative: {}
+       interpro: {  }
+       identifiant: {  }
+       id_societe: {  }
+       statut: {  }
+       raisins_mouts: {  }
+       exclusion_drm: {  }
+       relance_ds: {  }
+       teledeclaration_email: {  }
+       nature_inao: {  }
+       mois_stock_debut: { required: false }
+       recette_locale:
+         type: collection
+         definition:
+           fields:
+             id_douane: {  }
+             nom: {  }
+             ville: {  }
+       region: {  }
+       type_dr: {  }
+       liaisons_operateurs:
+           type: collection
+           definition:
+             fields:
+               '*':
+                 class: EtablissementLiaisonsOperateurs
+                 type: collection
+                 definition:
+                   fields:
+                     id_etablissement: { }
+                     libelle_etablissement: { }
+                     type_liaison: { }
+                     cvi: { }
+                     ppm: { }
+                     hash_chai: { }
+                     attributs_chai:
+                       type: collection
+                       definition:
+                         fields:
+                           '*': { }
+                     aliases:
+                       type: collection
+                       definition:
+                         fields:
+                           '*': { }
+       site_fiche: {  }
+       compte: {  }
+       num_interne: {  }
+       raison_sociale: {  }
+       nom: {  }
+       cvi: {  }
+       ppm: {  }
+       no_accises: {  }
+       carte_pro: {  }
+       famille: {  }
+       sous_famille: {  }
+
+       #adresse copié du compte
+       adresse: { }
+       adresse_complementaire: { }
+       code_postal: { }
+       commune: { }
+       pays: {  }
+       insee: { }
+       compte_type: { }
+       cedex: { required: false } #A supprimer
+
+       #contact
+       email: {  }
+       telephone_perso: {  }
+       telephone_bureau: {  }
+       telephone_mobile: {  }
+       fax: {  }
+       site_internet: { }
+       telephone: { required: false } #A supprimer
+
+       commentaire: {  }
+       crd_regime: { }
+       adresse_compta: { }
+       siret: { }
+       caution: { }
+       intitule: { required: false }
+       declaration_commune: { required: false }
+       declaration_commune: { required: false }
+       declaration_insee: { required: false }
+       raison_sociale_cautionneur: { required: false }
+       date_modification: { required: false }
+       acheteur_raisin: { required: false }
+       ds_decembre: { required: false }
+       no_ds_negociant: { required: false }
+       exploitant:
+          type: collection
+          required: false
+          definition:
+            fields:
+              civilite: {  }
+              nom: {  }
+              adresse: {  }
+              code_postal: {  }
+              commune: {  }
+              telephone: {  }
+              date_naissance: {  }
+       siege:
+           type: collection
+           definition:
+             fields:
+               adresse: {  }
+               adresse_complementaire: {  }
+               code_postal: {  }
+               commune: {  }
+               pays: { }
+               insee: { }
+       comptabilite:
+           type: collection
+           definition:
+             fields:
+               adresse: {  }
+               code_postal: {  }
+               commune: {  }
+               pays: {}
+       lieux_stockage:
+         type: collection
+         required: false
+         definition:
+           fields:
+             '*':
+               class: EtablissementLieuStockage
+               type: collection
+               definition:
+                 fields:
+                   numero: {  }
+                   nom: {  }
+                   adresse: {  }
+                   commune: {  }
+                   code_postal: {  }
+       chais:
+         type: array_collection
+         required: false
+         definition:
+           fields:
+             '*':
+               class: EtablissementChais
+               type: collection
+               definition:
+                 fields:
+                   nom: { }
+                   adresse: { }
+                   commune: { }
+                   code_postal: { }
+                   partage: boolean
+                   archive: boolean
+                   lat: {  }
+                   lon: {  }
+                   attributs:
+                     type: collection
+                     definition:
+                       fields:
+                          '*': { }
+# TODO : champs à virer après le merge
+       compte_societe_saved:
+         type: collection
+         required: false
+         definition:
+           fields:
+             num_interne: {  }
+             civilite: { }
+             prenom: { }
+             nom: { }
+             nom_a_afficher: {}
+             fonction: { }
+             commentaire: { }
+             mot_de_passe: { }
+             login: { required: false }
+             date_modification: { required: false  }
+             origines:
+               type: array_collection
+               definition:
+                 fields:
+                    '*': { }
+             id_societe: { }
+             adresse_societe: {  }
+             adresse: { }
+             adresse_complementaire: { }
+             code_postal: { }
+             commune: { }
+             insee: { }
+             compte_type: { }
+             cedex: { require: false } #A supprimer
+             pays: {  }
+             email: {  }
+             telephone_perso: {  }
+             telephone_bureau: {  }
+             telephone_mobile: {  }
+             fax: {  }
+             site_internet: { }
+             nom_a_afficher: {  }
+             raison_sociale_societe: { required: false }
+             type_societe: { required: false }
+             teledeclaration_active: { required: false }
+             gecos: { required: false }
+             lat: {  }
+             lon: {  }
+             societe_informations:
+               type: collection
+               definition:
+                 fields:
+                   type: { }
+                   raison_sociale: { }
+                   adresse: {  }
+                   adresse_complementaire: {  }
+                   code_postal: {  }
+                   commune: {  }
+                   email: {  }
+                   telephone: {  }
+                   fax: {  }
+             etablissement_informations:
+               type: collection
+               definition:
+                 fields:
+                   cvi: { }
+                   ppm: { }
+             interpro: {  }
+             statut: {  }
+             groupes:
+               type: array_collection
+               definition:
+                 fields:
+                   '*':
+                     type: collection
+                     definition:
+                       fields:
+                         nom: { }
+                         fonction: { }
+             tags:
+               type: collection
+               definition:
+                 fields:
+                   '*':
+                     type: array_collection
+                     definition:
+                       fields:
+                         '*': {}
+             droits:
+               type: array_collection
+               required: false
+               definition:
+                 fields:
+                   '*': { }
+             delegation:
+               type: array_collection
+               required: false
+               definition:
+                 fields:
+                   '*': { }

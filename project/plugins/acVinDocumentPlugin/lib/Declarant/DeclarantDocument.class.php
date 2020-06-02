@@ -9,7 +9,7 @@ class DeclarantDocument
     {
         $this->document = $document;
     }
-    
+
     public function getIdentifiant()
     {
         return $this->document->identifiant;
@@ -19,9 +19,9 @@ class DeclarantDocument
     {
         return $this->document->declarant;
     }
-    
+
     public function getEtablissementObject() {
-        
+
         return $this->document->getEtablissementObject();
     }
 
@@ -41,42 +41,67 @@ class DeclarantDocument
         $declarant->nom .= $etablissement->nom;
         $declarant->raison_sociale = $etablissement->getRaisonSociale();
         $declarant->cvi = $etablissement->cvi;
-        if($etablissement->exist("no_accises")) {
+
+        if($etablissement->exist("no_accises") && $declarant->exist("no_accises")) {
             $declarant->no_accises = $etablissement->getNoAccises();
         }
         if($etablissement->exist("siege")) {
             $declarant->adresse = $etablissement->siege->adresse;
-            if ($etablissement->siege->exist("adresse_complementaire")) {
-                $declarant->adresse .= ' ; '.$etablissement->siege->adresse_complementaire;
+            if ($etablissement->siege->exist("adresse_complementaire") && $etablissement->siege->adresse_complementaire) {
+                $declarant->adresse .= ' − '.$etablissement->siege->adresse_complementaire;
             }
             $declarant->commune = $etablissement->siege->commune;
             $declarant->code_postal = $etablissement->siege->code_postal;
         }
 
-        if($etablissement->exist("adresse")) {
+        if($etablissement->exist("adresse") && ($etablissement->adresse || $etablissement->commune || $etablissement->code_postal)) {
             $declarant->adresse = $etablissement->adresse;
         }
-        if($etablissement->exist("commune")) {
+        if($etablissement->exist("commune") && ($etablissement->adresse || $etablissement->commune || $etablissement->code_postal)) {
             $declarant->commune = $etablissement->commune;
         }
-        if($etablissement->exist("code_postal")) {
+        if($etablissement->exist("code_postal") && ($etablissement->adresse || $etablissement->commune || $etablissement->code_postal)) {
             $declarant->code_postal = $etablissement->code_postal;
         }
 
-        if($etablissement->exist("region")) {
+        if($etablissement->exist("region") && $declarant->exist('region')) {
             $declarant->region = $etablissement->getRegion();
         }
+
+        if ($etablissement->exist("ppm")) {
+          if($declarant->getDefinition()->exist('ppm'))
+          $declarant->add('ppm', $etablissement->ppm);
+        }
+
         if ($etablissement->exist("siret")) {
             if($declarant->getDefinition()->exist('siret'))
                  $declarant->add('siret', $etablissement->siret);
         }
         if ($etablissement->exist("telephone_bureau")) {
-            if($declarant->getDefinition()->exist('telephone'))
-                 $declarant->add('telephone', $etablissement->telephone_bureau);
+            if(!$declarant->getDefinition()->exist('telephone_bureau')){
+                if($declarant->getDefinition()->exist('telephone')){
+                    $declarant->add('telephone', $etablissement->telephone_bureau);
+                }
+            }else{
+                $declarant->add('telephone_bureau', $etablissement->telephone_bureau);
+            }
+
+        } elseif ($etablissement->exist("telephone")) {
+            if(!$declarant->getDefinition()->exist('telephone_bureau')){
+                if($declarant->getDefinition()->exist('telephone')){
+                    $declarant->add('telephone', $etablissement->telephone_bureau);
+                }
+            }else{
+                $declarant->add('telephone_bureau', $etablissement->telephone_bureau);
+            }
+        }
+        if ($etablissement->exist("telephone_mobile") && $declarant->getDefinition()->exist('telephone_mobile')) {
+            $declarant->add('telephone_mobile', $etablissement->telephone_mobile);
         }
         if ($etablissement->exist("email")) {
-            if($declarant->getDefinition()->exist('email'))
-               $declarant->add('email', $etablissement->email);
+            if($declarant->getDefinition()->exist('email')) {
+               $declarant->add('email', $etablissement->getUniqueEmail());
+            }
         }
         if ($etablissement->exist("fax")) {
              if($declarant->getDefinition()->exist('fax'))

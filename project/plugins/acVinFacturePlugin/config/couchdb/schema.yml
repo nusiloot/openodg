@@ -25,7 +25,7 @@ Facture:
       region: {}
       versement_comptable: {type: integer}
       versement_comptable_paiement: {type: integer}
-      arguments: 
+      arguments:
         type: collection
         definition:
           fields:
@@ -87,6 +87,7 @@ Facture:
                             fields:
                               libelle: {}
                               quantite: {type: float}
+                              unite: { required: false }
                               taux_tva: {type: float}
                               prix_unitaire: {type: float}
                               montant_tva: {type: float}
@@ -114,6 +115,22 @@ Facture:
           fields:
             #DRM ou SRV ID => "libelle"
             '*': {}
+      modalite_paiement: { required: false}
+      paiements:
+        class: FacturePaiements
+        required: false
+        type: array_collection
+        definition:
+          fields:
+            '*':
+              class: FacturePaiement
+              type: collection
+              definition:
+                fields:
+                  date : { }
+                  montant: { }
+                  type_reglement: { }
+                  commentaire: { }
       pieces:
         type: array_collection
         definition:
@@ -130,3 +147,89 @@ Facture:
                   mime: { }
                   visibilite: { type: integer }
                   source: { }
+                  fichiers:
+                    type: array_collection
+                    definition:
+                      fields:
+                        '*': { }
+
+TemplateFacture:
+  definition:
+    fields:
+      _id: {  }
+      _rev: {  }
+      type: {  }
+      campagne: {  }
+      template: {  }
+      libelle: {  }
+      docs:
+        type: array_collection
+        definition:
+          fields:
+            '*': {  }
+      arguments:
+        type: collection
+        definition:
+          fields:
+            '*': {  }
+      cotisations:
+        type: collection
+        definition:
+          fields:
+            '*':
+              type: collection
+              class: TemplateFactureCotisation
+              definition:
+                fields:
+                  modele: {  }
+                  fallback: { required: false }
+                  minimum: { required: false }
+                  minimum_fallback: { required: false }
+                  callback: { required: false }
+                  required: { required: false }
+                  libelle: {  }
+                  code_comptable: {  }
+                  details:
+                    type: collection
+                    definition:
+                      fields:
+                        '*':
+                          type: collection
+                          class: TemplateFactureCotisationDetail
+                          definition:
+                            fields:
+                              modele: {  }
+                              prix: {  }
+                              tva: {  }
+                              libelle: {  }
+                              variable: { required: false }
+                              tranche: { required: false }
+                              reference: { required: false }
+                              callback: { required: false }
+                              callback_parameters:
+                                type: array_collection
+                                required: false
+                                definition:
+                                  fields:
+                                    '*': {  }
+                              depart: { required: false }
+                              minimum: { required: false }
+                              complement: { required: false }
+                              complement_libelle: { }
+                              unite: { required: false }
+                              intervalles:
+                                required: false
+                                type: collection
+                                definition:
+                                  fields:
+                                    '*':
+                                      type: collection
+                                      definition:
+                                        fields:
+                                          prix: {  }
+                                          variable: {  }
+                              docs:
+                                type: array_collection
+                                definition:
+                                  fields:
+                                    '*': {  }

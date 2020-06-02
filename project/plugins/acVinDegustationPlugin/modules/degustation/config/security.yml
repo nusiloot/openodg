@@ -1,0 +1,11 @@
+all:
+  credentials: [[ADMIN]]
+
+tournee:
+  credentials: [[ADMIN, TOURNEE]]
+
+TourneeJson:
+  credentials: [[ADMIN, TOURNEE]]
+
+courrierPrelevement:
+  credentials: []

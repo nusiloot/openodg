@@ -22,6 +22,11 @@ class DrevRevendicationAjoutProduitForm extends acCouchdbObjectForm
         $this->setValidators(array(
             'hashref' => new sfValidatorChoice(array('required' => true, 'choices' => array_keys($produits)),array('required' => "Aucune appellation saisi."))
         ));
+        if(DrevConfiguration::getInstance()->hasMentionsCompletaire()) {
+            $this->widgetSchema['denomination_complementaire'] = new sfWidgetFormInput();
+            $this->widgetSchema['denomination_complementaire']->setLabel("");
+            $this->validatorSchema['denomination_complementaire'] = new sfValidatorString(array('required' => false));
+        }
         $this->widgetSchema->setNameFormat('drev_revendication_ajout_produit[%s]');
     }
 
@@ -30,11 +35,11 @@ class DrevRevendicationAjoutProduitForm extends acCouchdbObjectForm
         if (!$this->produits) {
             $produits = $this->getObject()->getConfigProduits();
             foreach ($produits as $produit) {
-                if ($this->getObject()->exist($produit->getHash())) {
-                    continue;
+                if (!$produit->isActif()) {
+                	continue;
                 }
 
-                $this->produits[$produit->getHash()] = $produit->getAppellation()->getLibelle().' '.$produit->getLibelle();
+                $this->produits[$produit->getHash()] = $produit->getLibelleComplet();
             }
         }
         return array_merge(array('' => ''), $this->produits);
@@ -48,8 +53,9 @@ class DrevRevendicationAjoutProduitForm extends acCouchdbObjectForm
     protected function doUpdateObject($values)
     {
         if (isset($values['hashref']) && !empty($values['hashref'])) {
-            $this->getObject()->addProduit($values['hashref']);
-            $this->getObject()->declaration->reorderByConf();
+            $denomination_complementaire = (isset($values['denomination_complementaire']) && !empty($values['denomination_complementaire']))? ($values['denomination_complementaire']) : null;
+            $this->getObject()->addProduit($values['hashref'],$denomination_complementaire);
         }
     }
+
 }

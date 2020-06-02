@@ -8,9 +8,25 @@ abstract class Mouvement extends acCouchdbDocumentTree
 
     protected $origines = array();
 
+    public function fillFromCotisation($cotisation) {
+        $this->categorie = $cotisation->getCollectionKey();
+        $this->type_hash = $cotisation->getDetailKey();
+        $this->type_libelle = $cotisation->getLibelle();
+        $this->quantite = $cotisation->getQuantite();
+        $this->taux = $cotisation->getPrix();
+        $this->tva = $cotisation->getTva();
+        if($cotisation->getUnite()) {
+            $this->add('unite', $cotisation->getUnite());
+        }
+    }
+
     public function setProduitHash($value) {
         $this->_set('produit_hash',  $value);
-        $this->produit_libelle = $this->getProduitConfig()->getLibelleFormat(array(), "%format_libelle%");
+        if(!$this->produit_libelle && $this->exist('denomination_complementaire')) {
+            $this->produit_libelle = $this->getProduitConfig()->getLibelleFormat($this->denomination_complementaire, "%format_libelle%");
+        } elseif(!$this->produit_libelle && !$this->exist('denomination_complementaire')) {
+            $this->produit_libelle = $this->getProduitConfig()->getLibelleFormat(array(), "%format_libelle%");
+        }
     }
 
     public function facturer() {

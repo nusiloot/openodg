@@ -2,58 +2,54 @@
 
 class DRevRevendicationProduitForm extends acCouchdbObjectForm {
 
+    public function __construct(acCouchdbJson $object, $options = array(), $CSRFSecret = null) {
+        parent::__construct($object, $options, $CSRFSecret);
+        $this->getValidatorSchema()->setOption('allow_extra_fields', true);
+        $this->getDocable()->remove();
+    }
+
     public function configure() {
         $this->setWidgets(array(
-            'superficie_revendique' => new sfWidgetFormInputFloat(),
-            'volume_revendique' => new sfWidgetFormInputFloat()
+            'volume_revendique_issu_recolte' => new bsWidgetFormInputFloat(),
         ));
-        $this->widgetSchema->setLabels(array(
-            'superficie_revendique' => 'Superficie totale (ares):',
-            'volume_revendique' => 'Volume revendiqué (hl):',
-        ));
+
         $this->setValidators(array(
-            'superficie_revendique' => new sfValidatorNumber(array('required' => false)),
-            'volume_revendique' => new sfValidatorNumber(array('required' => false))
+            'volume_revendique_issu_recolte' => new sfValidatorNumber(array('required' => false)),
         ));
 
-        if ($this->getObject()->detail->superficie_total) {
-            unset($this->widgetSchema['superficie_revendique']);
-            unset($this->validatorSchema['superficie_revendique']);
-        }
+        $this->embedForm('recolte', new DRevProduitRecolteForm($this->getObject()->recolte, array_merge($this->getOptions(), array("fields" => array('volume_total', 'recolte_nette', 'volume_sur_place', 'vci_constitue')))));
 
-        if($this->getObject()->canHaveVtsgn()) {
-            $this->setWidget('superficie_revendique_vtsgn', new sfWidgetFormInputFloat());
-            $this->setWidget('volume_revendique_vtsgn', new sfWidgetFormInputFloat());
-
-            $this->widgetSchema->setLabel('superficie_revendique_vtsgn', 'Superficie totale (ares):');
-            $this->widgetSchema->setLabel('volume_revendique_vtsgn', 'Volume revendiqué (hl)');
-
-            $this->setValidator('superficie_revendique_vtsgn', new sfValidatorNumber(array('required' => false)));
-            $this->setValidator('volume_revendique_vtsgn', new sfValidatorNumber(array('required' => false)));
-
-            if ($this->getObject()->detail_vtsgn->superficie_total) {
-                unset($this->widgetSchema['superficie_revendique_vtsgn']);
-                unset($this->validatorSchema['superficie_revendique_vtsgn']);
-            }
-        }
-
-        if ($this->getObject()->canHaveSuperficieVinifiee()) {
-        	$this->setWidget('superficie_vinifiee', new sfWidgetFormInputFloat());
-        	$this->getWidget('superficie_vinifiee')->setLabel("Superficie vinifiée (ares):");
-        	$this->setValidator('superficie_vinifiee', new sfValidatorNumber(array('required' => false)));
-        	
-        	if($this->getObject()->canHaveVtsgn()) {
-        		$this->setWidget('superficie_vinifiee_vtsgn', new sfWidgetFormInputFloat());
-        		$this->getWidget('superficie_vinifiee_vtsgn')->setLabel("Superficie vinifiée (ares):");
-        		$this->setValidator('superficie_vinifiee_vtsgn', new sfValidatorNumber(array('required' => false)));
-        	}
-        }
+        $this->getWidget('volume_revendique_issu_recolte')->setAttribute('class', $this->getWidget('volume_revendique_issu_recolte')->getAttribute('class').' input_sum_value');
 
         $this->widgetSchema->setNameFormat('[%s]');
     }
 
     public function doUpdateObject($values) {
-        parent::doUpdateObject($values);
+      if ($this->getOption('disabled_dr')) {
+          foreach($this->getEmbeddedForm('recolte')->getWidgetSchema()->getFields() as $key => $item) {
+              if(!$item->getAttribute('disabled')) {
+                  continue;
+              }
+              unset($values['recolte'][$key]);
+          }
+      }
+      if (isset($values['recolte']) && isset($values['recolte']['vci_constitue']) && $values['recolte']['vci_constitue']) {
+        $this->getObject()->vci->constitue = $values['recolte']['vci_constitue'];
+      }
+      parent::doUpdateObject($values);
     }
 
-}
+    protected function updateDefaultsFromObject() {
+      parent::updateDefaultsFromObject();
+      $defaults = $this->getDefaults();
+      if (is_null($defaults['volume_revendique_issu_recolte']) && ($this->getObject()->canCalculTheoriticalVolumeRevendiqueIssuRecolte())) {
+        $defaults['volume_revendique_issu_recolte'] = $this->getObject()->getTheoriticalVolumeRevendiqueIssuRecole();
+        if ($defaults['volume_revendique_issu_recolte'] < 0) {
+          unset($defaults['volume_revendique_issu_recolte']);
+        }
+      }
+      $this->setDefaults($defaults);
+    }
+
+
+  }

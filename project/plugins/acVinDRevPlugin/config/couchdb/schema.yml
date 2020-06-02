@@ -16,181 +16,114 @@ DRev:
       type: { }
       campagne: { }
       etape: { required: false }
+      achat_tolerance: { required: false }
       identifiant: { }
       validation: { }
       validation_odg: { }
+      envoi_oi: { required: false}
       non_recoltant: { required: false, type: integer }
       non_conditionneur: { required: false, type: integer }
       non_vinificateur: { required: false, type: integer }
       papier: { required: false, type: integer }
       automatique: { required: false, type: integer }
       lecture_seule: { required: false }
+      denomination_auto: { required: false }
       version: {  }
       declarant:
         type: collection
+        class: DRevDeclarant
         definition:
           fields:
             nom: { }
             raison_sociale: { }
             cvi: { }
+            ppm: { }
             siret: { }
             adresse: { }
             commune: { }
             code_postal: { }
-            telephone: { }
+            telephone: { required : false}
+            telephone_bureau: { }
+            telephone_mobile: { }
             fax: { }
             email: { }
+            famille: { }
       declaration:
         type: collection
         class: DRevDeclaration
-        inheritance: _DRevDeclarationNoeud
         definition:
           fields:
             '*':
-              #------ Certification ------
               type: collection
-              class: DRevCertification
-              inheritance: _DRevDeclarationNoeud
+              class: DRevDeclaration
               definition:
                 fields:
-                  libelle: { }
                   '*':
-                  #------ Genre ------
                     type: collection
-                    class: DRevGenre
-                    inheritance: _DRevDeclarationNoeud
+                    class: DRevProduit
                     definition:
                       fields:
                         libelle: { }
-                        '*':
-                          # ------ Appellation ------
+                        denomination_complementaire: { }
+                        superficie_revendique: { type: float }
+                        volume_revendique_issu_recolte: { type: float }
+                        volume_revendique_issu_vci: { type: float }
+                        volume_revendique_total: { type: float }
+                        validation_odg: { required: false }
+                        vci:
                           type: collection
-                          class: DRevAppellation
-                          inheritance: _DRevDeclarationNoeud
                           definition:
                             fields:
-                              libelle: { }
-                              # ------- MENTION ----------
-                              'mention':
-                                type : collection
-                                class: DRevMention
-                                inheritance: _DRevDeclarationNoeud
-                                definition:
-                                  fields:
-                                    libelle: { }
-                                    # ------- LIEU ----------
-                                    '*':
-                                      type: collection
-                                      class: DRevLieu
-                                      inheritance: _DRevDeclarationNoeud
-                                      definition:
-                                        fields:
-                                          libelle: { }
-                                          # ------ Couleur ------
-                                          '*':
-                                            type: collection
-                                            class: DRevCouleur
-                                            inheritance: _DRevDeclarationNoeud
-                                            definition:
-                                              fields:
-                                                libelle: { }
-                                                volume_revendique: { type: float }
-                                                volume_revendique_vtsgn: { type: float, required: false }
-                                                superficie_revendique: { type: float }
-                                                superficie_revendique_vtsgn: { type: float, required: false }
-                                                superficie_vinifiee: { type: float, required: false }
-                                                superficie_vinifiee_vtsgn: { type: float, required: false }
-                                                detail:
-                                                  type: collection
-                                                  definition:
-                                                    fields:
-                                                      volume_sur_place: { type: float }
-                                                      volume_sur_place_revendique: { type: float }
-                                                      usages_industriels_sur_place: { type: float }
-                                                      usages_industriels_total: { type: float }
-                                                      volume_total: { type: float }
-                                                      superficie_total: { type: float }
-                                                      superficie_vinifiee: { type: float, required: false }
-                                                      vci_sur_place: { type: float }
-                                                      vci_total: { type: float }
-                                                detail_vtsgn:
-                                                  type: collection
-                                                  required: false
-                                                  definition:
-                                                    fields:
-                                                      volume_sur_place: { type: float }
-                                                      volume_sur_place_revendique: { type: float }
-                                                      usages_industriels_sur_place: { type: float }
-                                                      usages_industriels_total: { type: float }
-                                                      volume_total: { type: float }
-                                                      superficie_total: { type: float }
-                                                      superficie_vinifiee: { type: float, required: false }
-                                                      vci_sur_place: { type: float }
-                                                      vci_total: { type: float }
-                                                # ------ Cépage ------
-                                                '*':
-                                                  type: collection
-                                                  class: DRevCepage
-                                                  inheritance: _DRevDeclarationNoeud
-                                                  definition:
-                                                    fields:
-                                                      libelle: { }
-                                                      detail:
-                                                        type: array_collection
-                                                        definition:
-                                                          fields:
-                                                            '*':
-                                                              type: collection
-                                                              class: DRevCepageDetail
-                                                              definition:
-                                                                fields:
-                                                                  volume_revendique_vt: { type: float }
-                                                                  volume_revendique_sgn: { type: float }
-                                                                  volume_revendique: { type: float }
-                                                                  volume_revendique_total: { type: float }
-                                                                  superficie_vinifiee_total: { type: float, required: false }
-                                                                  superficie_vinifiee: { type: float, required: false }
-                                                                  superficie_vinifiee_vt: { type: float, required: false }
-                                                                  superficie_vinifiee_sgn: { type: float, required: false }
-                                                                  superficie_revendique: { type: float }
-                                                                  superficie_revendique_vt: { type: float }
-                                                                  superficie_revendique_sgn: { type: float }
-                                                                  superficie_revendique_total: { type: float }
-                                                                  lieu: {  }
-                                                                  libelle: {  }
+                              stock_precedent: { type: float }
+                              destruction: { type: float }
+                              complement: { type: float }
+                              substitution: { type: float }
+                              rafraichi: { type: float }
+                              constitue: { type: float }
+                              ajustement: { type: float }
+                              stock_final: { type: float }
+                        recolte:
+                          type: collection
+                          definition:
+                            fields:
+                              volume_sur_place: { type: float }
+                              volume_sur_place_revendique: { type: float }
+                              usages_industriels_sur_place: { type: float }
+                              usages_industriels_total: { type: float }
+                              volume_total: { type: float }
+                              superficie_total: { type: float }
+                              recolte_nette: { type: float }
+                              vci_constitue: { type: float }
       prelevements:
+        required: false
         type: collection
+        definition:
+          fields:
+            '*': { }
+      lots:
+        required: false
+        type: array_collection
         definition:
           fields:
             '*':
               type: collection
-              class: DRevPrelevement
+              class: DRevLot
               definition:
                 fields:
-                  total_lots: {  }
-                  date: {  }
-                  date_precedente: { required: false }
-                  libelle_produit: {  }
-                  libelle_produit_type: {  }
-                  libelle_date: {  }
-                  libelle: {  }
-                  lots:
+                  date: { }
+                  id_document: { }
+                  numero: { }
+                  millesime: { }
+                  volume: { type: float }
+                  destination_type: { }
+                  destination_date: { }
+                  produit_hash: { }
+                  produit_libelle: { }
+                  cepages:
                     type: collection
                     definition:
                       fields:
-                        '*':
-                          type: collection
-                          class: DRevLot
-                          definition:
-                            fields:
-                              nb_vtsgn: {   }
-                              nb_hors_vtsgn: {  }
-                              libelle: {  }
-                              libelle_produit: { required: false }
-                              hash_produit: {  }
-                              vtsgn: { }
-                              volume_revendique: { type: float }
-                              no_vtsgn: { type: integer, required: false }
+                        '*': { type: float }
       documents:
         required: false
         class: DRevDocuments
@@ -219,13 +152,9 @@ DRev:
         type: collection
         definition:
           fields:
-            '*':
-              type: collection
-              definition:
-                fields:
-                  adresse: { }
-                  commune: { }
-                  code_postal: { }
+            adresse: { }
+            commune: { }
+            code_postal: { }
       mouvements:
         type: collection
         definition:
@@ -240,17 +169,24 @@ DRev:
                     type: collection
                     definition:
                       fields:
-                        categorie: {  }
-                        type_hash: {  }
-                        type_libelle: {  }
-                        quantite: { type: float }
-                        taux: { type: float }
                         facture: { type: integer }
                         facturable: { type: integer }
-                        template: { }
+                        produit_hash: {  }
+                        produit_libelle: {  }
+                        type_hash: {  }
+                        type_libelle: {  }
+                        detail_identifiant: {  }
+                        detail_libelle: {  }
+                        quantite: { type: float }
+                        unite: { required: false }
+                        taux: { }
+                        tva: { }
+                        facture: { type: integer }
+                        facturable: { type: integer }
                         date: {  }
                         date_version: {  }
                         version: {  }
+                        categorie: {  }
       pieces:
         type: array_collection
         definition:
@@ -267,3 +203,8 @@ DRev:
                   mime: { }
                   visibilite: { type: integer }
                   source: { }
+                  fichiers:
+                    type: array_collection
+                    definition:
+                      fields:
+                        '*': { }

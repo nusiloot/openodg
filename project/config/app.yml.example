@@ -1,6 +1,8 @@
 all:
   routing_context_production_host: declaration.ava-aoc.fr
-  auth_mode: NO_CAS #NO_CAS, CAS
+  auth
+    mode: NO_CAS #NO_CAS, CAS, NO_AUTH
+#    rights: [] 
   cas:
     domain: login.cas
     port: 443
@@ -13,26 +15,35 @@ all:
       from_name: "acExceptionNotifierPlugin"
       to: ["email@email.com"]
       subject: "[Nom] Erreur 500 : %title%"
+  organisme:
+    nom: "Nom de l'organisme"
   email_plugin:
     from_adresse: email@email.fr
     from_name: "From name"
     reply_to_adresse: "email@email.fr"
     reply_to_name: "Reply to name"
+    reply_to_facturation_adresse: "email@email.fr"
+    reply_to_facturation_name: "Reply to name"
     to_notification: ["email@email.fr"]
+    signature: "Signature de mail\nSignature de mail"
   url:
+    header: "https://url_header"
     civa: "https://url_civa"
     compte_mot_de_passe: "https://url_compte_civa_pour_modifier_mdp"
     compte_creation: "http://url_compte_creation"
     compte_mot_de_passe_oublie: "http://url_compte_mot_de_pass_oublie"
     dr_recuperation: "http://url_autorisation/"
   dates_ouverture:
-    drev: 
+    drev:
       debut: "YYYY-mm-dd"
       fin: "YYYY-mm-dd"
     drevmarc:
       debut: "YYYY-mm-dd"
       fin: "YYYY-mm-dd"
     parcellaire:
+      debut: "YYYY-mm-dd"
+      fin: "YYYY-mm-dd"
+    parcellaire_irrigable:
       debut: "YYYY-mm-dd"
       fin: "YYYY-mm-dd"
     parcellaire_cremant:
@@ -53,6 +64,12 @@ all:
         service_facturation: "Maison des Vins d'Alsace"
         telephone: "Téléphone 03 89 20 16 50 - Télécopie 03 89 20 16 60"
         email: "info@ava-aoc.fr"
+    coordonnees_bancaire:
+      siret: "XXX XXX XXX XXXXX"
+      banquenom: "Banque nom"
+      banqueadresse: "Adresse de la banque"
+      rib: "FRXX XXXX XXXX XXXX XXXX XXXX XXX"
+      bic: "XXXXBIC"
   degustation_courrier:
     responsable: "Responsable technique"
     visitetel: "00.00.00.00.00"
@@ -71,3 +88,49 @@ all:
       "100 cl": 100
       "150 cl": 150
       "300 cl": 300
+  scrapy:
+    bin: "/.../.../prodouane_scrapy/bin/download_douane.sh"
+    documents: "/.../.../prodouane_scrapy/documents"
+  oi:
+    login: utilisateur
+    mdp: motdepasse
+    domain_action: actions.example.org
+    url_http: http://actions.example.org/Service.asmx
+    regions:
+      REGION1:
+        login: utilisateur_region_1
+        mdp: motdepasse_region_1
+        domain_action: actions.example.org
+        url_http: http://actions.example.org/Service.asmx
+      REGION2:
+        login: utilisateur_region_1
+        mdp: motdepasse_region_1
+        domain_action: actions.example.org
+        url_http: http://actions.example.org/Service.asmx
+  dr:
+    categories:
+      '04': "4. Superficie de récolte"
+      '05': "5. Récolte totale"
+      '06': "6. Récolte vendue sous forme de raisins. Volume de vins obtenu"
+      '07': "7. Récolte vendue sous forme de moûts. Volume de moût obtenu"
+      '08': "8. Récolte apportée en cave coopérative par l'adhérent. Volume obtenu"
+      '09': "9. Récolte en cave particulière. Volume obtenu"
+      '10': "10. Volume en vinification"
+      '11': "11. Volume en concentration"
+      '12': "12. Volume autre destination"
+      '13': "13. Volume de MC ou de MCR"
+      '14': "14. Volume de vin sans AO/IGP avec ou sans cépage"
+      '15': "15. Vol. de vin avec AO/IGP avec/sans cépage dans la limite du rdt autorisé"
+      '16': "16. Vol. vin dépassement du rdt autorisé en AOP à livrer aux usages industriels"
+      '17': "17. Vol. d'eau éliminée en cas d'enrichissement par concentration partielle"
+      '18': "18. Volume Substituable Individuel (VSI)"
+      '19': "19. Volume complémentaire individuel (VCI)"
+      '22': "22. Motif de non récolte"
+  parcellaire:
+    expiration_cepage:
+      'barbaroux-rs': '1994-1995'
+      'calitor-noir-n': '1994-1995'
+  donnees_viticoles:
+    regions:
+      "": ""
+  export_webpath: null

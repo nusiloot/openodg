@@ -33,6 +33,7 @@ Degustation:
       telephone_mobile: { }
       date_demande: { }
       reporte: { }
+      force: {required: false}
       motif_non_prelevement: { }
       signature_base64: { }
       prelevements:
@@ -120,3 +121,8 @@ Degustation:
                   mime: { }
                   visibilite: { type: integer }
                   source: { }
+                  fichiers:
+                    type: array_collection
+                    definition:
+                      fields:
+                        '*': { }

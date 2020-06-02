@@ -9,20 +9,17 @@ Rappel des documents restant à envoyer :
 - <?php echo DRevDocuments::getDocumentLibelle($document->getKey()) ?>
 
 <?php endforeach; ?>
-
-Le ou les document(s) annexes peuvent nous être envoyés par mail (m.parisot@ava-aoc.fr) ou par voie postale :
-
-Association des Viticulteurs d'Alsace
-12 avenue de la Foire Aux Vins
-BP 91 225
-68012 Colmar Cedex
+Le ou les document(s) annexes peuvent nous être envoyés par mail ou par voie postale.
 <?php endif; ?>
 
 Vous pouvez à tout moment revenir sur votre compte pour consulter votre document : <?php echo sfContext::getInstance()->getRouting()->generate('drev_visualisation', $drev, true); ?>
 
-
 La validation définitive de votre déclaration de Revendication ne pourra se faire que lorsque nous aurons réceptionné la ou les pièces manquantes.
 
-Bien cordialement,
+Une fois tous les documents réceptionnés, la DREV sera envoyée à l'organisme de contrôle.
 
-Le service Appui technique (via l'application de télédéclaration)
+Pour toute question, n'hésitez pas à contacter votre syndicat.
+
+Bonne journée.
+
+<?php echo include_partial('Email/footerMail'); ?>

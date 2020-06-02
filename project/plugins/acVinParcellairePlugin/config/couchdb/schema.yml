@@ -4,21 +4,7 @@ Parcellaire:
     fields:
       _id: { }
       _rev: { }
-      type: { }
-      campagne: { }
-      identifiant: { }
-      etape: { }
-      validation: { }
-      validation_odg: { }
-      autorisation_acheteur: { }
-      papier: { required: false, type: integer }
-      type_proprietaire:
-        type: collection
-        required: false
-        definition:
-          fields:
-            '*': { }
-      acheteurs:
+      _attachments:
         type: collection
         definition:
           fields:
@@ -26,17 +12,14 @@ Parcellaire:
               type: collection
               definition:
                 fields:
-                  '*':
-                    type: collection
-                    definition:
-                      fields:
-                        cvi : { }
-                        nom : { }
-                        commune: { }
-                        email_envoye: { }
-                        email: { }
+                  '*': { }
+      type: { }
+      date: { }
+      identifiant: { }
+      source: { }
       declarant:
         type: collection
+        class: ParcellaireDeclarant
         definition:
           fields:
             nom: { }
@@ -46,108 +29,51 @@ Parcellaire:
             adresse: { }
             commune: { }
             code_postal: { }
-            telephone: { }
+            telephone: { required : false}
+            telephone_bureau: { }
+            telephone_mobile: { }
             fax: { }
             email: { }
       declaration:
         type: collection
         class: ParcellaireDeclaration
-        inheritance: _ParcellaireDeclarationNoeud
         definition:
           fields:
             '*':
-              #------ Certification ------
               type: collection
-              class: ParcellaireCertification
-              inheritance: _ParcellaireDeclarationNoeud
+              class: ParcellaireProduit
               definition:
                 fields:
                   libelle: { }
-                  '*':
-                  #------ Genre ------
+                  detail:
                     type: collection
-                    class: ParcellaireGenre
-                    inheritance: _ParcellaireDeclarationNoeud
                     definition:
                       fields:
-                        libelle: { }
                         '*':
-                          # ------ Appellation ------
                           type: collection
-                          class: ParcellaireAppellation
-                          inheritance: _ParcellaireDeclarationNoeud
+                          class: ParcellaireParcelle
                           definition:
                             fields:
-                              libelle: { }
-                              # ------- MENTION ----------
-                              'mention':
-                                type : collection
-                                class: ParcellaireMention
-                                inheritance: _ParcellaireDeclarationNoeud
-                                definition:
-                                  fields:
-                                    libelle: { }
-                                    # ------- LIEU ----------
-                                    '*':
-                                      type: collection
-                                      class: ParcellaireLieu
-                                      inheritance: _ParcellaireDeclarationNoeud
-                                      definition:
-                                        fields:
-                                          libelle: { }
-                                          # ------ Couleur ------
-                                          '*':
-                                            type: collection
-                                            class: ParcellaireCouleur
-                                            inheritance: _ParcellaireDeclarationNoeud
-                                            definition:
-                                              fields:
-                                                libelle: {}
-                                                # ------ Cépage ------
-                                                '*':
-                                                  type: collection
-                                                  class: ParcellaireCepage
-                                                  inheritance: _ParcellaireDeclarationNoeud
-                                                  definition:
-                                                    fields:
-                                                      libelle: { }
-                                                      acheteurs:
-                                                        type: collection
-                                                        definition:
-                                                          fields:
-                                                            '*':
-                                                              type: collection
-                                                              definition:
-                                                                fields:
-                                                                  '*':
-                                                                    type: collection
-                                                                    definition:
-                                                                      fields:
-                                                                        '*':
-                                                                          type: collection
-                                                                          definition:
-                                                                            fields:
-                                                                              cvi : { }
-                                                                              nom : { }
-                                                                              commune: { }
-                                                      detail:                                                        
-                                                        type: collection
-                                                        definition:
-                                                          fields:
-                                                            '*':
-                                                              type: collection
-                                                              class: ParcellaireCepageDetail
-                                                              definition:
-                                                                fields:
-                                                                  superficie: { type: float }
-                                                                  commune: { }
-                                                                  code_postal: { }
-                                                                  section: { }
-                                                                  numero_parcelle: { }
-                                                                  lieu: {  }
-                                                                  departement: {  }
-                                                                  active: { type: integer }
-                                                                  vtsgn: { type: integer }
+                              superficie: { type: float }
+                              superficie_cadastrale: { type: float }
+                              commune: { }
+                              code_postal: { required: false }
+                              code_commune: { }
+                              section: { }
+                              numero_parcelle: { }
+                              idu: { }
+                              lieu: { }
+                              cepage: { }
+                              campagne_plantation: { }
+                              numero_ordre: { required: false }
+                              departement: { required: false }
+                              active: { type: integer, required: false }
+                              vtsgn: { type: integer, required: false }
+                              code_insee: { required: false }
+                              ecart_rang: { type: float }
+                              ecart_pieds: { type: float }
+                              mode_savoirfaire: { required: false }
+                              porte_greffe: { required: false }
       pieces:
         type: array_collection
         definition:
@@ -164,3 +90,8 @@ Parcellaire:
                   mime: { }
                   visibilite: { type: integer }
                   source: { }
+                  fichiers:
+                    type: array_collection
+                    definition:
+                      fields:
+                        '*': { }
